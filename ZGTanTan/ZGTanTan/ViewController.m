@@ -69,13 +69,13 @@
             break;
         case 3:
             cell.backgroundColor = [UIColor grayColor];
+            [cell addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)]];
             break;
         default:
             cell.backgroundColor = [UIColor whiteColor];
             break;
     }
     
-    [cell addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)]];
     return cell;
 }
 
@@ -94,7 +94,7 @@
     ZGTanTanLayout *layout = (ZGTanTanLayout *)self.collectionView.collectionViewLayout;
     CGFloat distRate = self.currentDistance / self.maxDistance;
     layout.distanceRate = distRate > 1.0 ? 1 : distRate ;
-    layout.panCell = pan.view;
+    layout.panCell = (UICollectionViewCell *)pan.view;
     // 处理tanLayout
     [self.collectionView.collectionViewLayout invalidateLayout];
 }

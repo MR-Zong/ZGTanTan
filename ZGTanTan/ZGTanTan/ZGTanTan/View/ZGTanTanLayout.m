@@ -29,8 +29,8 @@
     
     
     // y,z轴，scale要变
-    CGFloat translationY = (tmpItem + self.distanceRate) * -20;
-    CGFloat translationZ = (tmpItem + self.distanceRate) * 10;
+    CGFloat translationY = (tmpItem + self.distanceRate) * -17;
+    CGFloat translationZ = (tmpItem + self.distanceRate) * 1;
     attr.transform3D = CATransform3DMakeTranslation(0, translationY, translationZ);
     
     CGFloat scaleX = (0.7 + (tmpItem + self.distanceRate)* 0.1);
@@ -45,7 +45,7 @@
     
     NSMutableArray *mArray = [NSMutableArray array];
     for (int i=0; i<4; i++) {
-        NSIndexPath *validIndexPath = [NSIndexPath indexPathForItem:i inSection:0];
+        NSIndexPath *tmpIndexPath = [NSIndexPath indexPathForItem:i inSection:0];
         
         if ( panIndexPath) {
             if (i == panIndexPath.item) {
@@ -53,12 +53,12 @@
             }else if(i == 0){
                 [mArray addObject:self.bottomLayoutAttribute];
             }else {
-                UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:validIndexPath];
+                UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:tmpIndexPath];
                 [mArray addObject:attr];
             }
             
         }else {
-            UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:validIndexPath];
+            UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:tmpIndexPath];
             if (i == 0) {
                 self.bottomLayoutAttribute = attr;
             }else if (i == 3) {
