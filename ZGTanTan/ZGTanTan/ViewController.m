@@ -17,7 +17,7 @@
 
 @property (nonatomic, assign) CGFloat currentDistance;
 
-@property (nonatomic, assign) CGPoint orginalCenter;
+@property (nonatomic, assign) CGPoint originalCenter;
 
 @end
 
@@ -32,7 +32,7 @@
 
 - (void)initialize
 {
-    self.maxDistance = 100.0;
+    self.maxDistance = 200.0;
 }
 
 - (void)setupViews
@@ -81,15 +81,22 @@
 
 - (void)didPan:(UIPanGestureRecognizer *)pan
 {
-    if (self.orginalCenter.x == 0 && self.orginalCenter.y == 0) {
-        self.orginalCenter = pan.view.center;
+    if (pan.state == UIGestureRecognizerStateEnded){
+        
+        [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionTransitionNone animations:^{
+            pan.view.center = self.originalCenter;
+        } completion:nil];
+        return;
+    }
+    if (self.originalCenter.x == 0 && self.originalCenter.y == 0) {
+        self.originalCenter = pan.view.center;
     }
     CGPoint point = [pan translationInView:self.collectionView];
     pan.view.center = CGPointMake(pan.view.center.x + point.x, pan.view.center.y + point.y);
     [pan setTranslation:CGPointMake(0, 0) inView:self.view];
     
-    CGFloat distanceX = pan.view.center.x - self.orginalCenter.x;
-    CGFloat distanceY = pan.view.center.y - self.orginalCenter.y;
+    CGFloat distanceX = pan.view.center.x - self.originalCenter.x;
+    CGFloat distanceY = pan.view.center.y - self.originalCenter.y;
     self.currentDistance = sqrt(distanceX * distanceX + distanceY * distanceY);
     ZGTanTanLayout *layout = (ZGTanTanLayout *)self.collectionView.collectionViewLayout;
     CGFloat distRate = self.currentDistance / self.maxDistance;
