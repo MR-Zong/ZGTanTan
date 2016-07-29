@@ -19,14 +19,21 @@
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewLayoutAttributes *attr = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-    attr.frame = CGRectMake(100, 300, 250, 250);
+    attr.frame = CGRectMake(100, 250, 250, 250);
 //    attr.zIndex = indexPath.item * 2;
+    
+    NSInteger tmpItem = indexPath.item;
+    if (tmpItem == 0 || tmpItem == 1) {
+        tmpItem = 1;
+    }
+    
+    
     // y,z轴，scale要变
-    CGFloat translationY = (indexPath.item + self.distanceRate) * -20;
-    CGFloat translationZ = (indexPath.item + self.distanceRate) * 10;
+    CGFloat translationY = (tmpItem + self.distanceRate) * -20;
+    CGFloat translationZ = (tmpItem + self.distanceRate) * 10;
     attr.transform3D = CATransform3DMakeTranslation(0, translationY, translationZ);
     
-    CGFloat scaleX = (0.6 + (indexPath.item + self.distanceRate)* 0.1);
+    CGFloat scaleX = (0.7 + (tmpItem + self.distanceRate)* 0.1);
     CGFloat scaleY = scaleX;
     attr.transform3D = CATransform3DScale(attr.transform3D, scaleX, scaleY, 1);
     return attr;
@@ -34,16 +41,28 @@
 
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect
 {
-    NSIndexPath *invalidIndexPath = [self.collectionView indexPathForCell:self.panCell];
+    NSIndexPath *panIndexPath = [self.collectionView indexPathForCell:self.panCell];
+    
     NSMutableArray *mArray = [NSMutableArray array];
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<4; i++) {
         NSIndexPath *validIndexPath = [NSIndexPath indexPathForItem:i inSection:0];
-        if ( invalidIndexPath && i == invalidIndexPath.item) {
-            [mArray addObject:self.panLayoutAttribute];
+        
+        if ( panIndexPath) {
+            if (i == panIndexPath.item) {
+                [mArray addObject:self.topLayoutAttribute];
+            }else if(i == 0){
+                [mArray addObject:self.bottomLayoutAttribute];
+            }else {
+                UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:validIndexPath];
+                [mArray addObject:attr];
+            }
+            
         }else {
             UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:validIndexPath];
-            if (i == 4) {
-                self.panLayoutAttribute = attr;
+            if (i == 0) {
+                self.bottomLayoutAttribute = attr;
+            }else if (i == 3) {
+                self.topLayoutAttribute = attr;
             }
             [mArray addObject:attr];
         }

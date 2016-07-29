@@ -51,7 +51,7 @@
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 10;
+    return 4;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -70,10 +70,6 @@
         case 3:
             cell.backgroundColor = [UIColor grayColor];
             break;
-        case 4:
-            cell.backgroundColor = [UIColor greenColor];
-            break;
-            
         default:
             cell.backgroundColor = [UIColor whiteColor];
             break;

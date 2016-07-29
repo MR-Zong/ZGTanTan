@@ -14,6 +14,8 @@
 
 @property (nonatomic, weak) UICollectionViewCell *panCell;
 
-@property (nonatomic, strong) UICollectionViewLayoutAttributes *panLayoutAttribute;
+@property (nonatomic, strong) UICollectionViewLayoutAttributes *topLayoutAttribute;
+
+@property (nonatomic, strong) UICollectionViewLayoutAttributes *bottomLayoutAttribute;
 
 @end
