@@ -23,6 +23,8 @@
 
 @property (nonatomic, weak) UICollectionViewCell *cell2;
 
+@property (nonatomic, assign) NSInteger numberOfCell;
+
 @end
 
 @implementation ViewController
@@ -36,12 +38,15 @@
 
 - (void)initialize
 {
-    self.maxDistance = 200.0;
+    self.maxDistance = 100.0;
+    self.numberOfCell = 400;
 }
 
 - (void)setupViews
 {
     ZGTanTanLayout *tanLayout = [[ZGTanTanLayout alloc] init];
+    tanLayout.numberOfCellInRect = 4;
+    tanLayout.endIndex = (int)(self.numberOfCell - 1);
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:tanLayout];
     self.collectionView.backgroundColor = [UIColor blackColor];
     self.collectionView.dataSource = self;
@@ -55,34 +60,22 @@
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 4;
+    return self.numberOfCell;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tanCollectionViewCell" forIndexPath:indexPath];
-    switch (indexPath.item) {
-        case 0:
-            cell.backgroundColor = [UIColor redColor];
-            break;
-        case 1:
-            cell.backgroundColor = [UIColor yellowColor];
-            self.cell1 = cell;
-            break;
-        case 2:
-            cell.backgroundColor = [UIColor orangeColor];
-            self.cell2 = cell;
-            break;
-        case 3:
-            cell.backgroundColor = [UIColor grayColor];
-            break;
-        default:
-            cell.backgroundColor = [UIColor whiteColor];
-            break;
-    }
-    [cell addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)]];
     
-//    cell.backgroundColor =  [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1];
+    ZGTanTanLayout *layout = (ZGTanTanLayout *)self.collectionView.collectionViewLayout;
+    if (indexPath.item == layout.endIndex) {
+        cell.userInteractionEnabled = YES;
+    }else {
+        cell.userInteractionEnabled = NO;
+    }
+    
+    [cell addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)]];
+    cell.backgroundColor =  [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1];
     
     return cell;
 }
@@ -99,8 +92,20 @@
             }completion:^(BOOL finished) {
                 if (finished == YES) {
                     
-                    [self.collectionView removeFromSuperview];
-                    [self setupViews];
+                    ZGTanTanLayout *layout = (ZGTanTanLayout *)self.collectionView.collectionViewLayout;
+                    layout.endIndex = layout.endIndex - 1;
+                    layout.panStart = NO;
+                    layout.distanceRate = 0;
+                    [layout invalidateLayout];
+                    
+                    for (int i=layout.numberOfCellInRect - 2; i>=0; i--) {
+                        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:layout.endIndex - i inSection:0]];
+                        [self.collectionView addSubview:cell];
+
+                        if (i == 0) {
+                            cell.userInteractionEnabled = YES;
+                        }
+                    }
                 }
             }];
             
@@ -110,6 +115,11 @@
             } completion:nil];
             
             [UIView animateWithDuration:0.5 animations:^{
+                
+                ZGTanTanLayout *layout = (ZGTanTanLayout *)self.collectionView.collectionViewLayout;
+                self.cell1 = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:layout.endIndex - 2 inSection:0]];
+                self.cell2 = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:layout.endIndex - 1 inSection:0]];
+                
                 self.cell1.layer.transform = [self transform3DWith:[NSIndexPath indexPathForItem:1 inSection:0] distanceRate:0];
                 self.cell2.layer.transform = [self transform3DWith:[NSIndexPath indexPathForItem:2 inSection:0] distanceRate:0];
             }];
@@ -117,6 +127,13 @@
         return;
     }
     
+    
+    
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        ZGTanTanLayout *layout = (ZGTanTanLayout *)self.collectionView.collectionViewLayout;
+        layout.panStart = YES;
+
+    }
     
     if (self.originalCenter.x == 0 && self.originalCenter.y == 0) {
         self.originalCenter = pan.view.center;
@@ -138,7 +155,6 @@
     ZGTanTanLayout *layout = (ZGTanTanLayout *)self.collectionView.collectionViewLayout;
     CGFloat distRate = self.currentDistance / self.maxDistance;
     layout.distanceRate = distRate > 1.0 ? 1 : distRate ;
-    layout.panCell = (UICollectionViewCell *)view;
     // 处理tanLayout
     [self.collectionView.collectionViewLayout invalidateLayout];
 

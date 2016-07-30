@@ -12,10 +12,16 @@
 
 @property (nonatomic, assign) CGFloat distanceRate;
 
-@property (nonatomic, weak) UICollectionViewCell *panCell;
+@property (nonatomic, assign) BOOL panStart;
 
 @property (nonatomic, strong) UICollectionViewLayoutAttributes *topLayoutAttribute;
 
 @property (nonatomic, strong) UICollectionViewLayoutAttributes *bottomLayoutAttribute;
+
+@property (nonatomic, assign) int endIndex;
+
+@property (nonatomic, assign) int startIndex;
+
+@property (nonatomic, assign) int numberOfCellInRect;
 
 @end

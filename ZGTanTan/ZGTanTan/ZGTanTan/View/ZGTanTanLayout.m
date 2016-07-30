@@ -19,15 +19,22 @@
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewLayoutAttributes *attr = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+    
+    
     attr.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - 250) / 2.0, 250, 250, 250);
 //    attr.zIndex = indexPath.item * 2;
     
     NSInteger tmpItem = indexPath.item;
-    if (tmpItem == 0 || tmpItem == 1) {
+    if (tmpItem == self.startIndex) {
         tmpItem = 1;
+    }else {
+        for (int i=1; i<self.numberOfCellInRect; i++) {
+            if (tmpItem == self.startIndex + i) {
+                tmpItem = i;
+            }
+        }
     }
-    
-    
+
     // y,z轴，scale要变
     CGFloat translationY = (tmpItem + self.distanceRate) * -17;
     CGFloat translationZ = (tmpItem + self.distanceRate) * 1;
@@ -41,39 +48,47 @@
 
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect
 {
-    NSIndexPath *panIndexPath = [self.collectionView indexPathForCell:self.panCell];
+    // 可显示Rect中总是要有self.numberOfCellInRect(4)个cell
+        NSMutableArray *mArray = [NSMutableArray array];
     
-    NSMutableArray *mArray = [NSMutableArray array];
-    for (int i=0; i<4; i++) {
+    for (int i=self.startIndex; i<=self.endIndex; i++) { // 返回界面上的4个cell
         NSIndexPath *tmpIndexPath = [NSIndexPath indexPathForItem:i inSection:0];
         
-        if ( panIndexPath) {
-            if (i == panIndexPath.item) {
-                [mArray addObject:self.topLayoutAttribute];
-            }else if(i == 0){
+        if ( self.panStart == YES) {
+            if(i == self.startIndex){
                 [mArray addObject:self.bottomLayoutAttribute];
-            }else {
+            }else if (i == self.endIndex) {
+                [mArray addObject:self.topLayoutAttribute];
+            } else {
                 UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:tmpIndexPath];
                 [mArray addObject:attr];
             }
             
         }else {
             UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:tmpIndexPath];
-            if (i == 0) {
+            if (i == self.startIndex) {
                 self.bottomLayoutAttribute = attr;
-            }else if (i == 3) {
+            }else if (i == self.endIndex) {
                 self.topLayoutAttribute = attr;
             }
             [mArray addObject:attr];
         }
 
     }
+
     return mArray.copy;
 }
 
 - (CGSize)collectionViewContentSize
 {
     return CGSizeMake(self.collectionView.bounds.size.width, self.collectionView.bounds.size.height);
+}
+
+#pragma mark - setter
+- (void)setEndIndex:(int)endIndex
+{
+    _endIndex = endIndex;
+    _startIndex = (int)((endIndex - self.numberOfCellInRect + 1) >= 0 ? (endIndex - self.numberOfCellInRect + 1) : 0 );
 }
 
 @end
