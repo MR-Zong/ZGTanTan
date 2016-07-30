@@ -19,7 +19,7 @@
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewLayoutAttributes *attr = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-    attr.frame = CGRectMake(100, 250, 250, 250);
+    attr.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - 250) / 2.0, 250, 250, 250);
 //    attr.zIndex = indexPath.item * 2;
     
     NSInteger tmpItem = indexPath.item;

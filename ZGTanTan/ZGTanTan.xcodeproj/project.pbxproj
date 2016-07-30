@@ -454,6 +454,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ZGTanTan/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Zong.ZGTanTan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -465,6 +466,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ZGTanTan/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Zong.ZGTanTan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -536,6 +538,7 @@
 				EF5C0FCB1D4B3F50006331B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EF5C0FCC1D4B3F50006331B9 /* Build configuration list for PBXNativeTarget "ZGTanTanTests" */ = {
 			isa = XCConfigurationList;
@@ -544,6 +547,7 @@
 				EF5C0FCE1D4B3F50006331B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EF5C0FCF1D4B3F50006331B9 /* Build configuration list for PBXNativeTarget "ZGTanTanUITests" */ = {
 			isa = XCConfigurationList;
@@ -552,6 +556,7 @@
 				EF5C0FD11D4B3F50006331B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
